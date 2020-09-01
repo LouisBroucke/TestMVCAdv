@@ -1,0 +1,10 @@
+﻿@model List<Genre>
+@{
+    ViewData["Title"] = "Genre";
+}
+
+<p>Kies het gewenste genre</p>
+@foreach (var genre in Model)
+{
+    <a asp-action="KiezenFilm" asp-route-id="@genre.GenreID">@genre.GenreNaam</a>
+}

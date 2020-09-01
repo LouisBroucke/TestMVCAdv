@@ -1,0 +1,35 @@
+﻿@model IEnumerable<Film>
+@{
+    ViewData["Title"] = "KiezenFilm";
+}
+
+<h2>@ViewBag.GenreNaam</h2>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Titel</th>
+            <th>Prijs</th>
+            <th>In voorraad</th>
+            <th>Huren</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var film in Model)
+	{
+		 <tr>
+             <td>@film.Titel</td>
+             <td>@film.Prijs</td>
+             <td>@film.InVoorraad</td>
+             <td>
+                 @if (film.InVoorraad != 0)
+                 {
+                     <a asp-action="ToevoegenFilm" 
+                        asp-route-id="@film.FilmID">
+                         <img src="~/images/plus.png" width="20px" height="20px"/>
+                     </a>
+                 }
+             </td>
+         </tr>
+	}
+    </tbody>
+</table>

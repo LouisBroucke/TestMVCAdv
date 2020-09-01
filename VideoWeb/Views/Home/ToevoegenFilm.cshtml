@@ -1,0 +1,30 @@
+﻿@model WinkelmandModel
+@{
+    ViewData["Title"] = "Winkelmand";
+}
+
+<h1>Winkelmandje</h1>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Titel</th>
+            <th>Prijs</th>
+            <th>Verwijderen</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var film in Model.Films)
+        {
+            <tr>
+                <td>@film.Value.Titel</td>
+                <td>@film.Value.Prijs</td>
+                <td>
+                    <a asp-action="VerwijderFilm" asp-route-titel="@film.Value.Titel">
+                        <img src="~/images/delete.png" />
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

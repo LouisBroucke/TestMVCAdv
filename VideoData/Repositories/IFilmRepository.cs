@@ -8,6 +8,6 @@ namespace VideoData.Repositories
     public interface IFilmRepository
     {
         Film GetFilm(int id);
-        IEnumerable<Film> GetAllFilms();
+        IEnumerable<Film> GetFilmsVoorGenre(int genreID);
     }
 }

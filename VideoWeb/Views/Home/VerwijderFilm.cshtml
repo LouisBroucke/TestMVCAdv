@@ -1,0 +1,13 @@
+﻿@model string
+@{
+    ViewData["Title"] = "VerwijderFilm";
+}
+
+<h1>Verwijder gehuurde film</h1>
+<p>@Model verwijderen uit jouw winkelmandje?</p>
+<form asp-action="VerwijderFilmDoorvoeren" asp-route-titel="@Model">
+    <input type="submit" value="JA" />
+</form>
+<form asp-action="ToevoegenFilm">
+    <input type="submit" value="NEE" />
+</form>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using VideoData.Models;
 
@@ -19,11 +20,6 @@ namespace VideoData.Repositories
             videoDB.Verhuringen.Add(verhuring);
         }
 
-        public IEnumerable<Film> GetAllFilms()
-        {
-            return videoDB.Films;
-        }
-
         public IEnumerable<Genre> GetAllGenres()
         {
             return videoDB.Genres;
@@ -34,14 +30,21 @@ namespace VideoData.Repositories
             return videoDB.Films.Find(id);
         }
 
+        public IEnumerable<Film> GetFilmsVoorGenre(int genreID)
+        {
+            return videoDB.Films
+                .Where(f => f.GenreID == genreID);
+        }
+
         public Genre GetGenre(int id)
         {
             return videoDB.Genres.Find(id);
         }
 
-        public Klant GetKlant(int id)
+        public Klant GetKlant(string voornaam, int postcode)
         {
-            return videoDB.Klanten.Find(id);
+            return videoDB.Klanten.FirstOrDefault(
+                k => k.Voornaam == voornaam && k.Postcode == postcode);
         }
     }
 }

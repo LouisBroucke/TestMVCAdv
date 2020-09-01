@@ -7,6 +7,6 @@ namespace VideoData.Repositories
 {
     public interface IKlantRepository
     {
-        Klant GetKlant(int id);
+        Klant GetKlant(string voornaam, int postcode);
     }
 }

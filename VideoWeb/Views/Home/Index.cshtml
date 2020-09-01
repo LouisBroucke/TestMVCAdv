@@ -1,8 +1,15 @@
-﻿@{
+﻿@model KlantViewModel
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<form asp-action="Aanmelden" method="get">
+    <div>
+        <label asp-for="Naam"></label>
+        <input asp-for="Naam" />
+        <label asp-for="Postcode"></label>
+        <input asp-for="Postcode" />
+        <div asp-validation-summary="All"></div>
+    </div>
+    <input type="submit" value="Aanmelden" class="btn btn-primary" />
+</form>
