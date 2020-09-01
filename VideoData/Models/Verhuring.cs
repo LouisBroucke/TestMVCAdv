@@ -6,7 +6,7 @@ namespace VideoData.Models
 {
     public class Verhuring
     {
-        public int VerhuurID { get; set; }
+        public int VerhuringID { get; set; }
         public int KlantID { get; set; }
         public int FilmID { get; set; }
         public DateTime VerhuurDatum { get; set; }
