@@ -5,6 +5,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using VideoData.Models;
 using VideoData.Repositories;
 using VideoWeb.Models;
 
@@ -13,7 +15,6 @@ namespace VideoWeb.Controllers
     public class HomeController : Controller
     {
         private SQLVideoRepository repository;
-        private WinkelmandModel winkelmand = new WinkelmandModel();
 
         public HomeController(SQLVideoRepository repository)
         {
@@ -34,6 +35,8 @@ namespace VideoWeb.Controllers
             if (this.ModelState.IsValid)
             {
                 var klant = repository.GetKlant(viewModel.Naam, viewModel.Postcode);
+
+                Response.Cookies.Append("klant", JsonConvert.SerializeObject(klant));
 
                 Response.Cookies.Append("naamBezoeker", klant.Voornaam + " " + klant.Naam);
 
@@ -56,31 +59,108 @@ namespace VideoWeb.Controllers
         {
             var genre = repository.GetGenre(id);
 
+            Response.Cookies.Append("genreID", id.ToString());
+
             ViewBag.GenreNaam = genre.GenreNaam;
 
             return View(repository.GetFilmsVoorGenre(id));
         }
-
-        //Toevoegen film
-        public IActionResult ToevoegenFilm(int? id)
+        
+        //Toevoegen film aan winkelmand
+        public IActionResult ToevoegenFilmAanWinkelmand(int id)
         {
-            if (id != null)
+            var film = repository.GetFilm(id);
+
+            if (Request.Cookies["winkelmand"] == null)
             {
-                var film = repository.GetFilm((int)id);
+                Dictionary<string, Film> films = new Dictionary<string, Film>();
 
-                if (!winkelmand.Films.ContainsKey(film.Titel))
+                films.Add(film.Titel ,film);
+
+                Response.Cookies.Append("winkelmand", JsonConvert.SerializeObject(films));
+            }
+            else
+            {
+                var films = JsonConvert.DeserializeObject<Dictionary<string, Film>>(
+                    Request.Cookies["winkelmand"]);
+
+                if (!films.ContainsKey(film.Titel))
                 {
-                    winkelmand.Films.Add(film.Titel, film);
+                    films.Add(film.Titel, film);
                 }
-            } 
 
-            return View(winkelmand);
+                Response.Cookies.Append("winkelmand", JsonConvert.SerializeObject(films));
+            }
+
+            return RedirectToAction("Winkelmand");
         }
 
-        //Verwijder film
-        public IActionResult VerwijderFilm(string titel)
+        //Winkelmandje
+        public IActionResult Winkelmand()
         {
-            return View((object)titel);
+            var films = JsonConvert.DeserializeObject<Dictionary<string, Film>>(
+                    Request.Cookies["winkelmand"]);
+
+            ViewBag.GenreID = Request.Cookies["genreID"];
+
+            return View(films);
+        }
+
+        //Film verwijderen uit winkelmandje
+        public IActionResult FilmVerwijderen(int id)
+        {
+            var film = repository.GetFilm(id);
+
+            return View(film);
+        }
+
+        //Verwijdering doorvoeren
+        public IActionResult VerwijderingDoorvoeren(int id)
+        {
+            var titel = repository.GetFilm(id).Titel;
+
+            var films = JsonConvert.DeserializeObject<Dictionary<string, Film>>(
+                    Request.Cookies["winkelmand"]);
+
+            films.Remove(titel);
+
+            Response.Cookies.Append("winkelmand", JsonConvert.SerializeObject(films));
+
+            return RedirectToAction("Winkelmand");
+        }
+
+        //Afrekenen
+        public IActionResult Afrekenen()
+        {
+            decimal totaal = 0m;
+
+            var films = JsonConvert.DeserializeObject<Dictionary<string, Film>>(
+                    Request.Cookies["winkelmand"]);            
+
+            var klant = JsonConvert.DeserializeObject<Klant>(
+                    Request.Cookies["klant"]);
+
+            foreach (var film in films.Values)
+            {
+                Verhuring verhuring = new Verhuring
+                {
+                    FilmID = film.FilmID,
+                    KlantID = klant.KlantID,
+                    VerhuurDatum = DateTime.Today
+                };
+
+                totaal += film.Prijs;
+
+                repository.Add(verhuring);
+                repository.PasVoorraadAan(film);
+            }
+
+            ViewBag.Naam = klant.Naam;
+            ViewBag.Straat = klant.Straat_Nr;
+            ViewBag.Plaats = klant.Gemeente;
+            ViewBag.TotaalPrijs = totaal;
+
+            return View(films);
         }
 
         public IActionResult Privacy()

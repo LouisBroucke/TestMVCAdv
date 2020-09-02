@@ -1,0 +1,31 @@
+﻿@model Dictionary<string, Film>
+@{
+    ViewData["Title"] = "Afrekenen";
+}
+
+<h2>Afrekenen</h2>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Titel</th>
+            <th>Prijs</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var film in Model)
+        {
+            <tr>
+                <td>@film.Value.Titel</td>
+                <td>@film.Value.Prijs</td>
+            </tr>
+        }
+        <tr class="font-weight-bold">
+            <td>Totaal</td>
+            <td>@ViewBag.TotaalPrijs</td>
+        </tr>
+    </tbody>
+</table>
+<p>wordt gefactureerd aan</p>
+<p>@ViewBag.Naam</p>
+<p>@ViewBag.Straat</p>
+<p>@ViewBag.Plaats</p>

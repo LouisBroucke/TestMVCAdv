@@ -23,7 +23,7 @@
              <td>
                  @if (film.InVoorraad != 0)
                  {
-                     <a asp-action="ToevoegenFilm" 
+                     <a asp-action="ToevoegenFilmAanWinkelmand" 
                         asp-route-id="@film.FilmID">
                          <img src="~/images/plus.png" width="20px" height="20px"/>
                      </a>
@@ -33,3 +33,4 @@
 	}
     </tbody>
 </table>
+<a asp-action="Genre">Terug naar genre-overzicht</a>

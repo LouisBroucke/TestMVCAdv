@@ -1,10 +1,9 @@
-﻿@model WinkelmandModel
+﻿@model Dictionary<string, Film>
 @{
     ViewData["Title"] = "Winkelmand";
 }
 
 <h1>Winkelmandje</h1>
-
 <table class="table table-striped">
     <thead>
         <tr>
@@ -14,17 +13,19 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var film in Model.Films)
+        @foreach (var film in Model)
         {
             <tr>
                 <td>@film.Value.Titel</td>
                 <td>@film.Value.Prijs</td>
                 <td>
-                    <a asp-action="VerwijderFilm" asp-route-titel="@film.Value.Titel">
-                        <img src="~/images/delete.png" />
+                    <a asp-action="FilmVerwijderen" asp-route-id="@film.Value.FilmID">
+                        <img src="~/images/delete.png" alt="verwijderen" />
                     </a>
                 </td>
             </tr>
         }
     </tbody>
 </table>
+<a asp-action="KiezenFilm" asp-route-id="@ViewBag.GenreID">Verder winkelen</a>
+<a asp-action="Afrekenen">Afrekenen</a>

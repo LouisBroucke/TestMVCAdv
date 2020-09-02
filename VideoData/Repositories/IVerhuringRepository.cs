@@ -8,5 +8,6 @@ namespace VideoData.Repositories
     public interface IVerhuringRepository
     {
         void Add(Verhuring verhuring);
+        int GetAantal();
     }
 }

@@ -9,5 +9,6 @@ namespace VideoData.Repositories
     {
         Film GetFilm(int id);
         IEnumerable<Film> GetFilmsVoorGenre(int genreID);
+        void PasVoorraadAan(Film film);
     }
 }

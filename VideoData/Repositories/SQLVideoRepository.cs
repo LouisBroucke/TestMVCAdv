@@ -18,6 +18,12 @@ namespace VideoData.Repositories
         public void Add(Verhuring verhuring)
         {
             videoDB.Verhuringen.Add(verhuring);
+            videoDB.SaveChanges();
+        }
+
+        public int GetAantal()
+        {
+            return videoDB.Verhuringen.Count();
         }
 
         public IEnumerable<Genre> GetAllGenres()
@@ -45,6 +51,14 @@ namespace VideoData.Repositories
         {
             return videoDB.Klanten.FirstOrDefault(
                 k => k.Voornaam == voornaam && k.Postcode == postcode);
+        }
+
+        public void PasVoorraadAan(Film film)
+        {
+            Film aanTePassenFilm = GetFilm(film.FilmID);
+
+            aanTePassenFilm.InVoorraad -= 1;
+            videoDB.SaveChanges();
         }
     }
 }
